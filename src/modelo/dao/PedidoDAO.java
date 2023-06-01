@@ -34,28 +34,24 @@ public class PedidoDAO extends ConexionDB {
 
     // MÉTODOS C.R.U.D.
     public void registrarPedido(Pedido miPedido) {
-        try {
-            miConnection = getConexion();
-            miPreparedStatement = miConnection.prepareStatement(INSERT);
-            miPreparedStatement.setInt(1, miPedido.getIdVenta());
-            miPreparedStatement.setInt(2, miPedido.getIdProducto());
-            miPreparedStatement.setInt(3, miPedido.getCantidad());
-            int mensaje = miPreparedStatement.executeUpdate();
-            // Mensaje
-            if (mensaje != 0) {
-                System.out.println("Pedido registrado");
-            }
-            // Fin mensaje
-        } catch (SQLException | NullPointerException ex) {
-            System.out.println(ex);
-        } finally {
-            try {
-                miConnection.close();
-            } catch (SQLException | NullPointerException e) {
-                System.out.println(e);
-            }
+    try {
+        miConnection = getConexion();
+        miPreparedStatement = miConnection.prepareStatement(INSERT);
+        miPreparedStatement.setInt(1, miPedido.getIdVenta());
+        miPreparedStatement.setInt(2, miPedido.getIdProducto());
+        miPreparedStatement.setInt(3, miPedido.getCantidad());
+        int mensaje = miPreparedStatement.executeUpdate();
+        // Mensaje
+        if (mensaje != 0) {
+            System.out.println("Pedido registrado");
         }
+        // Fin mensaje
+    } catch (SQLException | NullPointerException ex) {
+        System.out.println(ex);
+    } finally {
+        closeConnection();
     }
+}
 
     public Pedido buscarPedido(int idPedido) {
         Pedido miPedido = null;
@@ -190,4 +186,12 @@ public class PedidoDAO extends ConexionDB {
         miPedido.setCantidad(miResultSet.getInt("cantidad"));
         return miPedido;
     }
+    private void closeConnection() {
+    try {
+        miConnection.close();
+    } catch (SQLException | NullPointerException e) {
+        System.out.println(e);
+    }
+}
+
 }
