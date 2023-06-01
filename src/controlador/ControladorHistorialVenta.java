@@ -1,8 +1,3 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
 package controlador;
 
 import modelo.dao.CategoriaDAO;
@@ -12,13 +7,9 @@ import modelo.dao.ProductoDAO;
 import modelo.dao.UsuarioDAO;
 import vista.PanelHistorialVentas;
 
-/**
- *
- * @author krypt97
- */
 public class ControladorHistorialVenta {
 
-    // ATRIBUTOS DE CLASE
+    // Atributos de clase
     private PanelHistorialVentas miPanelHistorialVentas;
     private CategoriaDAO miCategoriaDAO;
     private ProductoDAO miProductoDAO;
@@ -29,12 +20,12 @@ public class ControladorHistorialVenta {
     private String dniUsuarioSelecionado;
     private String dniClienteSeleccionado;
 
-    // ENLACE VISTA
+    // Enlace vista
     public void setPanelHistorialVentas(PanelHistorialVentas miPanelHistorialVentas) {
         this.miPanelHistorialVentas = miPanelHistorialVentas;
     }
 
-    // Dao
+    // Configuración de los DAOs
     public void setUsuarioDAO(UsuarioDAO miUsuarioDAO) {
         this.miUsuarioDAO = miUsuarioDAO;
     }
@@ -55,14 +46,40 @@ public class ControladorHistorialVenta {
         this.miCategoriaDAO = miCategoriaDAO;
     }
 
-    // MÉTODOS DE CLASE
+    // Método principal para cargar los pedidos seleccionados
     public void cargarPedidosSeleccionados() {
+        // Obtener los valores seleccionados desde la vista
         idVentaSeleccionado = miPanelHistorialVentas.idVentaSeleccionado();
         dniUsuarioSelecionado = miPanelHistorialVentas.dniUsuarioSeleccionado();
         dniClienteSeleccionado = miPanelHistorialVentas.dniClienteSeleccionado();
-        miPanelHistorialVentas.desempaquetarDatosUsuario(miUsuarioDAO.buscarUsuario(dniUsuarioSelecionado));
-        miPanelHistorialVentas.desempaquetarDatosCliente(miClienteDAO.buscarCliente(dniClienteSeleccionado));
-        miPanelHistorialVentas.SetTablaPedidos(miPedidoDAO.listarCarritoPedidos(idVentaSeleccionado), miProductoDAO.listarProductos(), miCategoriaDAO.listarCategorias());
+
+        // Desempaquetar datos de usuario y cliente
+        desempaquetarDatosUsuario(); // Extract Method: Long Method
+        desempaquetarDatosCliente(); // Extract Method: Long Method
+
+        // Configurar la tabla de pedidos
+        configurarTablaPedidos(); // Extract Method: Long Method
+
+        // Enfocar la tabla de pedidos
         miPanelHistorialVentas.tblPedidos.requestFocus();
+    }
+
+    // Método para desempaquetar los datos del usuario
+    private void desempaquetarDatosUsuario() {
+        miPanelHistorialVentas.desempaquetarDatosUsuario(miUsuarioDAO.buscarUsuario(dniUsuarioSelecionado));
+    }
+
+    // Método para desempaquetar los datos del cliente
+    private void desempaquetarDatosCliente() {
+        miPanelHistorialVentas.desempaquetarDatosCliente(miClienteDAO.buscarCliente(dniClienteSeleccionado));
+    }
+
+    // Método para configurar la tabla de pedidos
+    private void configurarTablaPedidos() {
+        miPanelHistorialVentas.SetTablaPedidos(
+                miPedidoDAO.listarCarritoPedidos(idVentaSeleccionado),
+                miProductoDAO.listarProductos(),
+                miCategoriaDAO.listarCategorias()
+        );
     }
 }
