@@ -1,18 +1,10 @@
-/*
- * To change this license header, choose License Headers in Project Properties.
- * To change this template file, choose Tools | Templates
- * and open the template in the editor.
- */
+
 package controlador;
 
 import modelo.vo.Usuario;
 import modelo.dao.UsuarioDAO;
 import vista.PanelUsuarios;
 
-/**
- *
- * @author krypt97
- */
 public class ControladorUsuario {
 
     // ATRIBUTOS DE CLASE
@@ -56,15 +48,21 @@ public class ControladorUsuario {
 
     public void buscarUsuario() {
         dniUsuario = miPanelUsuarios.txtDni.getText();
-        if (miUsuarioDAO.buscarUsuario(dniUsuario) != null) {
-            miPanelUsuarios.desempaquetarDatosUsuario(miUsuarioDAO.buscarUsuario(dniUsuario));
+        Usuario usuario = miUsuarioDAO.buscarUsuario(dniUsuario);
+        if (usuario != null) {
+            miPanelUsuarios.desempaquetarDatosUsuario(usuario);
         }
     }
 
     public void cargarUsuarioSeleccionado() {
         dniUsuario = miPanelUsuarios.dniSeleccionado();
         miPanelUsuarios.txtDni.setText(dniUsuario);
-        miPanelUsuarios.desempaquetarDatosUsuario(miUsuarioDAO.buscarUsuario(dniUsuario));
+        Usuario usuario = miUsuarioDAO.buscarUsuario(dniUsuario);
+        miPanelUsuarios.desempaquetarDatosUsuario(usuario);
         miPanelUsuarios.txtDni.requestFocus();
+    }
+    
+    private void actualizarTablaUsuarios() {
+        miPanelUsuarios.setTablaUsuarios(miUsuarioDAO.listarUsuarios());
     }
 }
